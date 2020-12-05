@@ -3,14 +3,147 @@
  * Do not make changes to this file directly
  */
 
-import * as Context from "./src/context"
-import { FieldAuthorizeResolver } from "@nexus/schema/dist/plugins/fieldAuthorizePlugin"
+import * as Context from "./src/context";
+import { FieldAuthorizeResolver } from "@nexus/schema/dist/plugins/fieldAuthorizePlugin";
 
+import * as Typegen from "nexus-plugin-prisma/typegen";
+import * as Prisma from "@prisma/client";
+
+// Pagination type
+type Pagination = {
+  first?: boolean;
+  last?: boolean;
+  before?: boolean;
+  after?: boolean;
+};
+
+// Prisma custom scalar names
+type CustomScalars = "DateTime";
+
+// Prisma model type definitions
+interface PrismaModels {
+  User: Prisma.User;
+  Todo: Prisma.Todo;
+}
+
+// Prisma input types metadata
+interface NexusPrismaInputs {
+  Query: {
+    users: {
+      filtering:
+        | "AND"
+        | "OR"
+        | "NOT"
+        | "id"
+        | "username"
+        | "password"
+        | "todos"
+        | "todoId"
+        | "count";
+      ordering: "id" | "username" | "password" | "todoId" | "count";
+    };
+    todos: {
+      filtering:
+        | "AND"
+        | "OR"
+        | "NOT"
+        | "id"
+        | "createdAt"
+        | "body"
+        | "User"
+        | "userId"
+        | "completed";
+      ordering: "id" | "createdAt" | "body" | "userId" | "completed";
+    };
+  };
+  User: {
+    todos: {
+      filtering:
+        | "AND"
+        | "OR"
+        | "NOT"
+        | "id"
+        | "createdAt"
+        | "body"
+        | "User"
+        | "userId"
+        | "completed";
+      ordering: "id" | "createdAt" | "body" | "userId" | "completed";
+    };
+  };
+  Todo: {};
+}
+
+// Prisma output types metadata
+interface NexusPrismaOutputs {
+  Query: {
+    user: "User";
+    users: "User";
+    todo: "Todo";
+    todos: "Todo";
+  };
+  Mutation: {
+    createOneUser: "User";
+    updateOneUser: "User";
+    updateManyUser: "BatchPayload";
+    deleteOneUser: "User";
+    deleteManyUser: "BatchPayload";
+    upsertOneUser: "User";
+    createOneTodo: "Todo";
+    updateOneTodo: "Todo";
+    updateManyTodo: "BatchPayload";
+    deleteOneTodo: "Todo";
+    deleteManyTodo: "BatchPayload";
+    upsertOneTodo: "Todo";
+  };
+  User: {
+    id: "Int";
+    username: "String";
+    password: "String";
+    todos: "Todo";
+    todoId: "Int";
+    count: "Int";
+  };
+  Todo: {
+    id: "Int";
+    createdAt: "DateTime";
+    body: "String";
+    User: "User";
+    userId: "Int";
+    completed: "Boolean";
+  };
+}
+
+// Helper to gather all methods relative to a model
+interface NexusPrismaMethods {
+  User: Typegen.NexusPrismaFields<"User">;
+  Todo: Typegen.NexusPrismaFields<"Todo">;
+  Query: Typegen.NexusPrismaFields<"Query">;
+  Mutation: Typegen.NexusPrismaFields<"Mutation">;
+}
+
+interface NexusPrismaGenTypes {
+  inputs: NexusPrismaInputs;
+  outputs: NexusPrismaOutputs;
+  methods: NexusPrismaMethods;
+  models: PrismaModels;
+  pagination: Pagination;
+  scalars: CustomScalars;
+}
+
+declare global {
+  interface NexusPrismaGen extends NexusPrismaGenTypes {}
+
+  type NexusPrisma<
+    TypeName extends string,
+    ModelOrCrud extends "model" | "crud"
+  > = Typegen.GetNexusPrisma<TypeName, ModelOrCrud>;
+}
 
 declare global {
   interface NexusGenCustomOutputProperties<TypeName extends string> {
-    crud: NexusPrisma<TypeName, 'crud'>
-    model: NexusPrisma<TypeName, 'model'>
+    crud: NexusPrisma<TypeName, "crud">;
+    model: NexusPrisma<TypeName, "model">;
   }
 }
 
@@ -19,75 +152,84 @@ declare global {
 }
 
 export interface NexusGenInputs {
-  BoolFilter: { // input type
+  BoolFilter: {
+    // input type
     equals?: boolean | null; // Boolean
-    not?: NexusGenInputs['NestedBoolFilter'] | null; // NestedBoolFilter
-  }
-  DateTimeFilter: { // input type
-    equals?: NexusGenScalars['DateTime'] | null; // DateTime
-    gt?: NexusGenScalars['DateTime'] | null; // DateTime
-    gte?: NexusGenScalars['DateTime'] | null; // DateTime
-    in?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
-    lt?: NexusGenScalars['DateTime'] | null; // DateTime
-    lte?: NexusGenScalars['DateTime'] | null; // DateTime
-    not?: NexusGenInputs['NestedDateTimeFilter'] | null; // NestedDateTimeFilter
-    notIn?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
-  }
-  IntFilter: { // input type
+    not?: NexusGenInputs["NestedBoolFilter"] | null; // NestedBoolFilter
+  };
+  DateTimeFilter: {
+    // input type
+    equals?: NexusGenScalars["DateTime"] | null; // DateTime
+    gt?: NexusGenScalars["DateTime"] | null; // DateTime
+    gte?: NexusGenScalars["DateTime"] | null; // DateTime
+    in?: NexusGenScalars["DateTime"][] | null; // [DateTime!]
+    lt?: NexusGenScalars["DateTime"] | null; // DateTime
+    lte?: NexusGenScalars["DateTime"] | null; // DateTime
+    not?: NexusGenInputs["NestedDateTimeFilter"] | null; // NestedDateTimeFilter
+    notIn?: NexusGenScalars["DateTime"][] | null; // [DateTime!]
+  };
+  IntFilter: {
+    // input type
     equals?: number | null; // Int
     gt?: number | null; // Int
     gte?: number | null; // Int
     in?: number[] | null; // [Int!]
     lt?: number | null; // Int
     lte?: number | null; // Int
-    not?: NexusGenInputs['NestedIntFilter'] | null; // NestedIntFilter
+    not?: NexusGenInputs["NestedIntFilter"] | null; // NestedIntFilter
     notIn?: number[] | null; // [Int!]
-  }
-  IntNullableFilter: { // input type
+  };
+  IntNullableFilter: {
+    // input type
     equals?: number | null; // Int
     gt?: number | null; // Int
     gte?: number | null; // Int
     in?: number[] | null; // [Int!]
     lt?: number | null; // Int
     lte?: number | null; // Int
-    not?: NexusGenInputs['NestedIntNullableFilter'] | null; // NestedIntNullableFilter
+    not?: NexusGenInputs["NestedIntNullableFilter"] | null; // NestedIntNullableFilter
     notIn?: number[] | null; // [Int!]
-  }
-  NestedBoolFilter: { // input type
+  };
+  NestedBoolFilter: {
+    // input type
     equals?: boolean | null; // Boolean
-    not?: NexusGenInputs['NestedBoolFilter'] | null; // NestedBoolFilter
-  }
-  NestedDateTimeFilter: { // input type
-    equals?: NexusGenScalars['DateTime'] | null; // DateTime
-    gt?: NexusGenScalars['DateTime'] | null; // DateTime
-    gte?: NexusGenScalars['DateTime'] | null; // DateTime
-    in?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
-    lt?: NexusGenScalars['DateTime'] | null; // DateTime
-    lte?: NexusGenScalars['DateTime'] | null; // DateTime
-    not?: NexusGenInputs['NestedDateTimeFilter'] | null; // NestedDateTimeFilter
-    notIn?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
-  }
-  NestedIntFilter: { // input type
+    not?: NexusGenInputs["NestedBoolFilter"] | null; // NestedBoolFilter
+  };
+  NestedDateTimeFilter: {
+    // input type
+    equals?: NexusGenScalars["DateTime"] | null; // DateTime
+    gt?: NexusGenScalars["DateTime"] | null; // DateTime
+    gte?: NexusGenScalars["DateTime"] | null; // DateTime
+    in?: NexusGenScalars["DateTime"][] | null; // [DateTime!]
+    lt?: NexusGenScalars["DateTime"] | null; // DateTime
+    lte?: NexusGenScalars["DateTime"] | null; // DateTime
+    not?: NexusGenInputs["NestedDateTimeFilter"] | null; // NestedDateTimeFilter
+    notIn?: NexusGenScalars["DateTime"][] | null; // [DateTime!]
+  };
+  NestedIntFilter: {
+    // input type
     equals?: number | null; // Int
     gt?: number | null; // Int
     gte?: number | null; // Int
     in?: number[] | null; // [Int!]
     lt?: number | null; // Int
     lte?: number | null; // Int
-    not?: NexusGenInputs['NestedIntFilter'] | null; // NestedIntFilter
+    not?: NexusGenInputs["NestedIntFilter"] | null; // NestedIntFilter
     notIn?: number[] | null; // [Int!]
-  }
-  NestedIntNullableFilter: { // input type
+  };
+  NestedIntNullableFilter: {
+    // input type
     equals?: number | null; // Int
     gt?: number | null; // Int
     gte?: number | null; // Int
     in?: number[] | null; // [Int!]
     lt?: number | null; // Int
     lte?: number | null; // Int
-    not?: NexusGenInputs['NestedIntNullableFilter'] | null; // NestedIntNullableFilter
+    not?: NexusGenInputs["NestedIntNullableFilter"] | null; // NestedIntNullableFilter
     notIn?: number[] | null; // [Int!]
-  }
-  NestedStringFilter: { // input type
+  };
+  NestedStringFilter: {
+    // input type
     contains?: string | null; // String
     endsWith?: string | null; // String
     equals?: string | null; // String
@@ -96,11 +238,12 @@ export interface NexusGenInputs {
     in?: string[] | null; // [String!]
     lt?: string | null; // String
     lte?: string | null; // String
-    not?: NexusGenInputs['NestedStringFilter'] | null; // NestedStringFilter
+    not?: NexusGenInputs["NestedStringFilter"] | null; // NestedStringFilter
     notIn?: string[] | null; // [String!]
     startsWith?: string | null; // String
-  }
-  StringFilter: { // input type
+  };
+  StringFilter: {
+    // input type
     contains?: string | null; // String
     endsWith?: string | null; // String
     equals?: string | null; // String
@@ -109,282 +252,323 @@ export interface NexusGenInputs {
     in?: string[] | null; // [String!]
     lt?: string | null; // String
     lte?: string | null; // String
-    mode?: NexusGenEnums['QueryMode'] | null; // QueryMode
-    not?: NexusGenInputs['NestedStringFilter'] | null; // NestedStringFilter
+    mode?: NexusGenEnums["QueryMode"] | null; // QueryMode
+    not?: NexusGenInputs["NestedStringFilter"] | null; // NestedStringFilter
     notIn?: string[] | null; // [String!]
     startsWith?: string | null; // String
-  }
-  TodoCreateInput: { // input type
+  };
+  TodoCreateInput: {
+    // input type
     body: string; // String!
     completed?: boolean | null; // Boolean
-    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
-    User?: NexusGenInputs['UserCreateOneWithoutTodosInput'] | null; // UserCreateOneWithoutTodosInput
-  }
-  TodoListRelationFilter: { // input type
-    every?: NexusGenInputs['TodoWhereInput'] | null; // TodoWhereInput
-    none?: NexusGenInputs['TodoWhereInput'] | null; // TodoWhereInput
-    some?: NexusGenInputs['TodoWhereInput'] | null; // TodoWhereInput
-  }
-  TodoWhereInput: { // input type
-    AND?: NexusGenInputs['TodoWhereInput'][] | null; // [TodoWhereInput!]
-    body?: NexusGenInputs['StringFilter'] | null; // StringFilter
-    completed?: NexusGenInputs['BoolFilter'] | null; // BoolFilter
-    createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
-    id?: NexusGenInputs['IntFilter'] | null; // IntFilter
-    NOT?: NexusGenInputs['TodoWhereInput'][] | null; // [TodoWhereInput!]
-    OR?: NexusGenInputs['TodoWhereInput'][] | null; // [TodoWhereInput!]
-    User?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
-    userId?: NexusGenInputs['IntNullableFilter'] | null; // IntNullableFilter
-  }
-  TodoWhereUniqueInput: { // input type
+    createdAt?: NexusGenScalars["DateTime"] | null; // DateTime
+    User?: NexusGenInputs["UserCreateOneWithoutTodosInput"] | null; // UserCreateOneWithoutTodosInput
+  };
+  TodoListRelationFilter: {
+    // input type
+    every?: NexusGenInputs["TodoWhereInput"] | null; // TodoWhereInput
+    none?: NexusGenInputs["TodoWhereInput"] | null; // TodoWhereInput
+    some?: NexusGenInputs["TodoWhereInput"] | null; // TodoWhereInput
+  };
+  TodoWhereInput: {
+    // input type
+    AND?: NexusGenInputs["TodoWhereInput"][] | null; // [TodoWhereInput!]
+    body?: NexusGenInputs["StringFilter"] | null; // StringFilter
+    completed?: NexusGenInputs["BoolFilter"] | null; // BoolFilter
+    createdAt?: NexusGenInputs["DateTimeFilter"] | null; // DateTimeFilter
+    id?: NexusGenInputs["IntFilter"] | null; // IntFilter
+    NOT?: NexusGenInputs["TodoWhereInput"][] | null; // [TodoWhereInput!]
+    OR?: NexusGenInputs["TodoWhereInput"][] | null; // [TodoWhereInput!]
+    User?: NexusGenInputs["UserWhereInput"] | null; // UserWhereInput
+    userId?: NexusGenInputs["IntNullableFilter"] | null; // IntNullableFilter
+  };
+  TodoWhereUniqueInput: {
+    // input type
     id?: number | null; // Int
-  }
-  UserCreateOneWithoutTodosInput: { // input type
-    connect?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
-    connectOrCreate?: NexusGenInputs['UserCreateOrConnectWithouttodosInput'] | null; // UserCreateOrConnectWithouttodosInput
-    create?: NexusGenInputs['UserCreateWithoutTodosInput'] | null; // UserCreateWithoutTodosInput
-  }
-  UserCreateOrConnectWithouttodosInput: { // input type
-    create: NexusGenInputs['UserCreateWithoutTodosInput']; // UserCreateWithoutTodosInput!
-    where: NexusGenInputs['UserWhereUniqueInput']; // UserWhereUniqueInput!
-  }
-  UserCreateWithoutTodosInput: { // input type
+  };
+  UserCreateOneWithoutTodosInput: {
+    // input type
+    connect?: NexusGenInputs["UserWhereUniqueInput"] | null; // UserWhereUniqueInput
+    connectOrCreate?:
+      | NexusGenInputs["UserCreateOrConnectWithouttodosInput"]
+      | null; // UserCreateOrConnectWithouttodosInput
+    create?: NexusGenInputs["UserCreateWithoutTodosInput"] | null; // UserCreateWithoutTodosInput
+  };
+  UserCreateOrConnectWithouttodosInput: {
+    // input type
+    create: NexusGenInputs["UserCreateWithoutTodosInput"]; // UserCreateWithoutTodosInput!
+    where: NexusGenInputs["UserWhereUniqueInput"]; // UserWhereUniqueInput!
+  };
+  UserCreateWithoutTodosInput: {
+    // input type
     count?: number | null; // Int
     password: string; // String!
     todoId?: number | null; // Int
     username: string; // String!
-  }
-  UserWhereInput: { // input type
-    AND?: NexusGenInputs['UserWhereInput'][] | null; // [UserWhereInput!]
-    count?: NexusGenInputs['IntFilter'] | null; // IntFilter
-    id?: NexusGenInputs['IntFilter'] | null; // IntFilter
-    NOT?: NexusGenInputs['UserWhereInput'][] | null; // [UserWhereInput!]
-    OR?: NexusGenInputs['UserWhereInput'][] | null; // [UserWhereInput!]
-    password?: NexusGenInputs['StringFilter'] | null; // StringFilter
-    todoId?: NexusGenInputs['IntNullableFilter'] | null; // IntNullableFilter
-    todos?: NexusGenInputs['TodoListRelationFilter'] | null; // TodoListRelationFilter
-    username?: NexusGenInputs['StringFilter'] | null; // StringFilter
-  }
-  UserWhereUniqueInput: { // input type
+  };
+  UserWhereInput: {
+    // input type
+    AND?: NexusGenInputs["UserWhereInput"][] | null; // [UserWhereInput!]
+    count?: NexusGenInputs["IntFilter"] | null; // IntFilter
+    id?: NexusGenInputs["IntFilter"] | null; // IntFilter
+    NOT?: NexusGenInputs["UserWhereInput"][] | null; // [UserWhereInput!]
+    OR?: NexusGenInputs["UserWhereInput"][] | null; // [UserWhereInput!]
+    password?: NexusGenInputs["StringFilter"] | null; // StringFilter
+    todoId?: NexusGenInputs["IntNullableFilter"] | null; // IntNullableFilter
+    todos?: NexusGenInputs["TodoListRelationFilter"] | null; // TodoListRelationFilter
+    username?: NexusGenInputs["StringFilter"] | null; // StringFilter
+  };
+  UserWhereUniqueInput: {
+    // input type
     id?: number | null; // Int
     username?: string | null; // String
-  }
+  };
 }
 
 export interface NexusGenEnums {
-  QueryMode: "default" | "insensitive"
+  QueryMode: "default" | "insensitive";
 }
 
 export interface NexusGenScalars {
-  String: string
-  Int: number
-  Float: number
-  Boolean: boolean
-  ID: string
-  DateTime: any
+  String: string;
+  Int: number;
+  Float: number;
+  Boolean: boolean;
+  ID: string;
+  DateTime: any;
 }
 
 export interface NexusGenObjects {
-  BatchPayload: { // root type
+  BatchPayload: {
+    // root type
     count: number; // Int!
-  }
-  ErrorField: { // root type
+  };
+  ErrorField: {
+    // root type
     field?: string | null; // String
     message?: string | null; // String
-  }
+  };
   Mutation: {};
   Query: {};
-  Todo: { // root type
+  Todo: {
+    // root type
     body: string; // String!
     completed: boolean; // Boolean!
-    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    createdAt: NexusGenScalars["DateTime"]; // DateTime!
     id: number; // Int!
     userId?: number | null; // Int
-  }
-  User: { // root type
+  };
+  User: {
+    // root type
     count: number; // Int!
     id: number; // Int!
     password: string; // String!
     todoId?: number | null; // Int
     token?: string | null; // String
     username: string; // String!
-  }
-  UserResponse: { // root type
-    error?: NexusGenRootTypes['ErrorField'] | null; // ErrorField
-    user?: NexusGenRootTypes['User'] | null; // User
-  }
+  };
+  UserResponse: {
+    // root type
+    error?: NexusGenRootTypes["ErrorField"] | null; // ErrorField
+    user?: NexusGenRootTypes["User"] | null; // User
+  };
 }
 
-export interface NexusGenInterfaces {
-}
+export interface NexusGenInterfaces {}
 
-export interface NexusGenUnions {
-}
+export interface NexusGenUnions {}
 
-export type NexusGenRootTypes = NexusGenObjects
+export type NexusGenRootTypes = NexusGenObjects;
 
-export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
+export type NexusGenAllTypes = NexusGenRootTypes &
+  NexusGenScalars &
+  NexusGenEnums;
 
 export interface NexusGenFieldTypes {
-  BatchPayload: { // field return type
+  BatchPayload: {
+    // field return type
     count: number; // Int!
-  }
-  ErrorField: { // field return type
+  };
+  ErrorField: {
+    // field return type
     field: string | null; // String
     message: string | null; // String
-  }
-  Mutation: { // field return type
+  };
+  Mutation: {
+    // field return type
     check: boolean | null; // Boolean
-    createOneTodo: NexusGenRootTypes['Todo']; // Todo!
-    deleteManyTodo: NexusGenRootTypes['BatchPayload']; // BatchPayload!
-    deleteManyUser: NexusGenRootTypes['BatchPayload']; // BatchPayload!
-    deleteOneTodo: NexusGenRootTypes['Todo'] | null; // Todo
-    deleteOneUser: NexusGenRootTypes['User'] | null; // User
-    login: NexusGenRootTypes['UserResponse'] | null; // UserResponse
+    createOneTodo: NexusGenRootTypes["Todo"]; // Todo!
+    deleteManyTodo: NexusGenRootTypes["BatchPayload"]; // BatchPayload!
+    deleteManyUser: NexusGenRootTypes["BatchPayload"]; // BatchPayload!
+    deleteOneTodo: NexusGenRootTypes["Todo"] | null; // Todo
+    deleteOneUser: NexusGenRootTypes["User"] | null; // User
+    login: NexusGenRootTypes["UserResponse"] | null; // UserResponse
     logout: boolean | null; // Boolean
-    register: NexusGenRootTypes['UserResponse'] | null; // UserResponse
-  }
-  Query: { // field return type
-    me: NexusGenRootTypes['User'] | null; // User
-    todo: NexusGenRootTypes['Todo'] | null; // Todo
-    todos: NexusGenRootTypes['Todo'][]; // [Todo!]!
-    user: NexusGenRootTypes['User'] | null; // User
-    users: NexusGenRootTypes['User'][]; // [User!]!
-  }
-  Todo: { // field return type
+    register: NexusGenRootTypes["UserResponse"] | null; // UserResponse
+  };
+  Query: {
+    // field return type
+    me: NexusGenRootTypes["User"] | null; // User
+    todo: NexusGenRootTypes["Todo"] | null; // Todo
+    todos: NexusGenRootTypes["Todo"][]; // [Todo!]!
+    user: NexusGenRootTypes["User"] | null; // User
+    users: NexusGenRootTypes["User"][]; // [User!]!
+  };
+  Todo: {
+    // field return type
     body: string; // String!
     completed: boolean; // Boolean!
-    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    createdAt: NexusGenScalars["DateTime"]; // DateTime!
     id: number; // Int!
-    User: NexusGenRootTypes['User'] | null; // User
+    User: NexusGenRootTypes["User"] | null; // User
     userId: number | null; // Int
-  }
-  User: { // field return type
+  };
+  User: {
+    // field return type
     count: number; // Int!
     id: number; // Int!
     password: string; // String!
     todoId: number | null; // Int
-    todos: NexusGenRootTypes['Todo'][]; // [Todo!]!
+    todos: NexusGenRootTypes["Todo"][]; // [Todo!]!
     token: string | null; // String
     username: string; // String!
-  }
-  UserResponse: { // field return type
-    error: NexusGenRootTypes['ErrorField'] | null; // ErrorField
-    user: NexusGenRootTypes['User'] | null; // User
-  }
+  };
+  UserResponse: {
+    // field return type
+    error: NexusGenRootTypes["ErrorField"] | null; // ErrorField
+    user: NexusGenRootTypes["User"] | null; // User
+  };
 }
 
 export interface NexusGenFieldTypeNames {
-  BatchPayload: { // field return type name
-    count: 'Int'
-  }
-  ErrorField: { // field return type name
-    field: 'String'
-    message: 'String'
-  }
-  Mutation: { // field return type name
-    check: 'Boolean'
-    createOneTodo: 'Todo'
-    deleteManyTodo: 'BatchPayload'
-    deleteManyUser: 'BatchPayload'
-    deleteOneTodo: 'Todo'
-    deleteOneUser: 'User'
-    login: 'UserResponse'
-    logout: 'Boolean'
-    register: 'UserResponse'
-  }
-  Query: { // field return type name
-    me: 'User'
-    todo: 'Todo'
-    todos: 'Todo'
-    user: 'User'
-    users: 'User'
-  }
-  Todo: { // field return type name
-    body: 'String'
-    completed: 'Boolean'
-    createdAt: 'DateTime'
-    id: 'Int'
-    User: 'User'
-    userId: 'Int'
-  }
-  User: { // field return type name
-    count: 'Int'
-    id: 'Int'
-    password: 'String'
-    todoId: 'Int'
-    todos: 'Todo'
-    token: 'String'
-    username: 'String'
-  }
-  UserResponse: { // field return type name
-    error: 'ErrorField'
-    user: 'User'
-  }
+  BatchPayload: {
+    // field return type name
+    count: "Int";
+  };
+  ErrorField: {
+    // field return type name
+    field: "String";
+    message: "String";
+  };
+  Mutation: {
+    // field return type name
+    check: "Boolean";
+    createOneTodo: "Todo";
+    deleteManyTodo: "BatchPayload";
+    deleteManyUser: "BatchPayload";
+    deleteOneTodo: "Todo";
+    deleteOneUser: "User";
+    login: "UserResponse";
+    logout: "Boolean";
+    register: "UserResponse";
+  };
+  Query: {
+    // field return type name
+    me: "User";
+    todo: "Todo";
+    todos: "Todo";
+    user: "User";
+    users: "User";
+  };
+  Todo: {
+    // field return type name
+    body: "String";
+    completed: "Boolean";
+    createdAt: "DateTime";
+    id: "Int";
+    User: "User";
+    userId: "Int";
+  };
+  User: {
+    // field return type name
+    count: "Int";
+    id: "Int";
+    password: "String";
+    todoId: "Int";
+    todos: "Todo";
+    token: "String";
+    username: "String";
+  };
+  UserResponse: {
+    // field return type name
+    error: "ErrorField";
+    user: "User";
+  };
 }
 
 export interface NexusGenArgTypes {
   Mutation: {
-    check: { // args
+    check: {
+      // args
       id?: number | null; // Int
-    }
-    createOneTodo: { // args
-      data: NexusGenInputs['TodoCreateInput']; // TodoCreateInput!
-    }
-    deleteManyTodo: { // args
-      where?: NexusGenInputs['TodoWhereInput'] | null; // TodoWhereInput
-    }
-    deleteManyUser: { // args
-      where?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
-    }
-    deleteOneTodo: { // args
-      where: NexusGenInputs['TodoWhereUniqueInput']; // TodoWhereUniqueInput!
-    }
-    deleteOneUser: { // args
-      where: NexusGenInputs['UserWhereUniqueInput']; // UserWhereUniqueInput!
-    }
-    login: { // args
+    };
+    createOneTodo: {
+      // args
+      data: NexusGenInputs["TodoCreateInput"]; // TodoCreateInput!
+    };
+    deleteManyTodo: {
+      // args
+      where?: NexusGenInputs["TodoWhereInput"] | null; // TodoWhereInput
+    };
+    deleteManyUser: {
+      // args
+      where?: NexusGenInputs["UserWhereInput"] | null; // UserWhereInput
+    };
+    deleteOneTodo: {
+      // args
+      where: NexusGenInputs["TodoWhereUniqueInput"]; // TodoWhereUniqueInput!
+    };
+    deleteOneUser: {
+      // args
+      where: NexusGenInputs["UserWhereUniqueInput"]; // UserWhereUniqueInput!
+    };
+    login: {
+      // args
       password: string; // String!
       username: string; // String!
-    }
-    register: { // args
+    };
+    register: {
+      // args
       password: string; // String!
       username: string; // String!
-    }
-  }
+    };
+  };
   Query: {
-    todo: { // args
-      where: NexusGenInputs['TodoWhereUniqueInput']; // TodoWhereUniqueInput!
-    }
-    todos: { // args
-      where?: NexusGenInputs['TodoWhereInput'] | null; // TodoWhereInput
-    }
-    user: { // args
-      where: NexusGenInputs['UserWhereUniqueInput']; // UserWhereUniqueInput!
-    }
-    users: { // args
-      after?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
-      before?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
+    todo: {
+      // args
+      where: NexusGenInputs["TodoWhereUniqueInput"]; // TodoWhereUniqueInput!
+    };
+    todos: {
+      // args
+      where?: NexusGenInputs["TodoWhereInput"] | null; // TodoWhereInput
+    };
+    user: {
+      // args
+      where: NexusGenInputs["UserWhereUniqueInput"]; // UserWhereUniqueInput!
+    };
+    users: {
+      // args
+      after?: NexusGenInputs["UserWhereUniqueInput"] | null; // UserWhereUniqueInput
+      before?: NexusGenInputs["UserWhereUniqueInput"] | null; // UserWhereUniqueInput
       first?: number | null; // Int
       last?: number | null; // Int
-      where?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
-    }
-  }
+      where?: NexusGenInputs["UserWhereInput"] | null; // UserWhereInput
+    };
+  };
   User: {
-    todos: { // args
-      after?: NexusGenInputs['TodoWhereUniqueInput'] | null; // TodoWhereUniqueInput
-      before?: NexusGenInputs['TodoWhereUniqueInput'] | null; // TodoWhereUniqueInput
+    todos: {
+      // args
+      after?: NexusGenInputs["TodoWhereUniqueInput"] | null; // TodoWhereUniqueInput
+      before?: NexusGenInputs["TodoWhereUniqueInput"] | null; // TodoWhereUniqueInput
       first?: number | null; // Int
       last?: number | null; // Int
-    }
-  }
+    };
+  };
 }
 
-export interface NexusGenAbstractTypeMembers {
-}
+export interface NexusGenAbstractTypeMembers {}
 
-export interface NexusGenTypeInterfaces {
-}
+export interface NexusGenTypeInterfaces {}
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
 
@@ -404,11 +588,11 @@ export type NexusGenAbstractsUsingStrategyResolveType = never;
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {
-    isTypeOf: false
-    resolveType: true
-    __typename: false
-  }
-}
+    isTypeOf: false;
+    resolveType: true;
+    __typename: false;
+  };
+};
 
 export interface NexusGenTypes {
   context: Context.Context;
@@ -425,21 +609,32 @@ export interface NexusGenTypes {
   interfaceNames: NexusGenInterfaceNames;
   scalarNames: NexusGenScalarNames;
   unionNames: NexusGenUnionNames;
-  allInputTypes: NexusGenTypes['inputNames'] | NexusGenTypes['enumNames'] | NexusGenTypes['scalarNames'];
-  allOutputTypes: NexusGenTypes['objectNames'] | NexusGenTypes['enumNames'] | NexusGenTypes['unionNames'] | NexusGenTypes['interfaceNames'] | NexusGenTypes['scalarNames'];
-  allNamedTypes: NexusGenTypes['allInputTypes'] | NexusGenTypes['allOutputTypes']
-  abstractTypes: NexusGenTypes['interfaceNames'] | NexusGenTypes['unionNames'];
+  allInputTypes:
+    | NexusGenTypes["inputNames"]
+    | NexusGenTypes["enumNames"]
+    | NexusGenTypes["scalarNames"];
+  allOutputTypes:
+    | NexusGenTypes["objectNames"]
+    | NexusGenTypes["enumNames"]
+    | NexusGenTypes["unionNames"]
+    | NexusGenTypes["interfaceNames"]
+    | NexusGenTypes["scalarNames"];
+  allNamedTypes:
+    | NexusGenTypes["allInputTypes"]
+    | NexusGenTypes["allOutputTypes"];
+  abstractTypes: NexusGenTypes["interfaceNames"] | NexusGenTypes["unionNames"];
   abstractTypeMembers: NexusGenAbstractTypeMembers;
   objectsUsingAbstractStrategyIsTypeOf: NexusGenObjectsUsingAbstractStrategyIsTypeOf;
   abstractsUsingStrategyResolveType: NexusGenAbstractsUsingStrategyResolveType;
   features: NexusGenFeaturesConfig;
 }
 
-
 declare global {
-  interface NexusGenPluginTypeConfig<TypeName extends string> {
-  }
-  interface NexusGenPluginFieldConfig<TypeName extends string, FieldName extends string> {
+  interface NexusGenPluginTypeConfig<TypeName extends string> {}
+  interface NexusGenPluginFieldConfig<
+    TypeName extends string,
+    FieldName extends string
+  > {
     /**
      * Authorization for an individual field. Returning "true"
      * or "Promise<true>" means the field can be accessed.
@@ -448,13 +643,13 @@ declare global {
      * Returning or throwing an error will also prevent the
      * resolver from executing.
      */
-    authorize?: FieldAuthorizeResolver<TypeName, FieldName>
+    authorize?: FieldAuthorizeResolver<TypeName, FieldName>;
     /**
      * Whether the type can be null
      * @default (depends on whether nullability is configured in type or schema)
      * @see declarativeWrappingPlugin
      */
-    nullable?: boolean
+    nullable?: boolean;
     /**
      * Whether the type is list of values, or just a single value.
      * If list is true, we assume the type is a list. If list is an array,
@@ -462,21 +657,24 @@ declare global {
      * the type is required (non-null), where true = nonNull, false = nullable.
      * @see declarativeWrappingPlugin
      */
-    list?: true | boolean[]
+    list?: true | boolean[];
     /**
      * Whether the type should be non null, `required: true` = `nullable: false`
      * @default (depends on whether nullability is configured in type or schema)
      * @see declarativeWrappingPlugin
      */
-    required?: boolean
+    required?: boolean;
   }
-  interface NexusGenPluginInputFieldConfig<TypeName extends string, FieldName extends string> {
+  interface NexusGenPluginInputFieldConfig<
+    TypeName extends string,
+    FieldName extends string
+  > {
     /**
      * Whether the type can be null
      * @default (depends on whether nullability is configured in type or schema)
      * @see declarativeWrappingPlugin
      */
-    nullable?: boolean
+    nullable?: boolean;
     /**
      * Whether the type is list of values, or just a single value.
      * If list is true, we assume the type is a list. If list is an array,
@@ -484,23 +682,22 @@ declare global {
      * the type is required (non-null), where true = nonNull, false = nullable.
      * @see declarativeWrappingPlugin
      */
-    list?: true | boolean[]
+    list?: true | boolean[];
     /**
      * Whether the type should be non null, `required: true` = `nullable: false`
      * @default (depends on whether nullability is configured in type or schema)
      * @see declarativeWrappingPlugin
      */
-    required?: boolean
+    required?: boolean;
   }
-  interface NexusGenPluginSchemaConfig {
-  }
+  interface NexusGenPluginSchemaConfig {}
   interface NexusGenPluginArgConfig {
     /**
      * Whether the type can be null
      * @default (depends on whether nullability is configured in type or schema)
      * @see declarativeWrappingPlugin
      */
-    nullable?: boolean
+    nullable?: boolean;
     /**
      * Whether the type is list of values, or just a single value.
      * If list is true, we assume the type is a list. If list is an array,
@@ -508,12 +705,12 @@ declare global {
      * the type is required (non-null), where true = nonNull, false = nullable.
      * @see declarativeWrappingPlugin
      */
-    list?: true | boolean[]
+    list?: true | boolean[];
     /**
      * Whether the type should be non null, `required: true` = `nullable: false`
      * @default (depends on whether nullability is configured in type or schema)
      * @see declarativeWrappingPlugin
      */
-    required?: boolean
+    required?: boolean;
   }
 }
