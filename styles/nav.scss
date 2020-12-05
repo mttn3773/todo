@@ -1,0 +1,33 @@
+@import "./_partial";
+nav {
+  height: 5rem;
+  background: #333333;
+  position: sticky;
+  align-items: center;
+  justify-content: space-between;
+  display: flex;
+  color: #efefef;
+  .logo {
+    margin-left: 3rem;
+    font-size: 1.8em;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    @extend %change-color;
+  }
+  ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+    margin-right: 3rem;
+    li {
+      font-size: 1.5em;
+      a {
+        color: #efefef;
+        text-decoration: none;
+        cursor: pointer;
+        @extend %change-color;
+      }
+    }
+  }
+}

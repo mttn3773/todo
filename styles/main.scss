@@ -1,0 +1,31 @@
+// NAV BAR
+@import "./nav.scss";
+// ------------------
+body {
+  font-family: "Montserrat", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background: linear-gradient(
+    to right,
+    rgb(15, 32, 39),
+    rgb(32, 58, 67),
+    rgb(44, 83, 100)
+  );
+}
+
+// FORM
+@import "./form.scss";
+// -----------------
+
+// NOTIFY
+@import "./notify.scss";
+//
+
+//TOAST
+@import "./toast.scss";
+//
+
+// TODO
+@import "./todo.scss";
+//

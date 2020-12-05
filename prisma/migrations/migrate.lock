@@ -1,0 +1,7 @@
+# Prisma Migrate lockfile v1
+
+20201129100500-initial-migration
+20201129105822-second
+20201130135400-added-something
+20201201153350-user-login
+20201204132325-complete

@@ -1,0 +1,5 @@
+mutation deleteTodo($id: Int!) {
+  deleteOneTodo(where: { id: $id }) {
+    id
+  }
+}

@@ -1,0 +1,7 @@
+mutation createTodo($body: String!, $userId: Int!) {
+  createOneTodo(data: { body: $body, User: { connect: { id: $userId } } }) {
+    id
+    body
+    completed
+  }
+}

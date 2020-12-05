@@ -1,0 +1,49 @@
+.notify-container {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  width: 15%;
+  height: 70%;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 1rem;
+  overflow: hidden;
+  .notify-body {
+    position: relative;
+    padding: 1.4rem;
+    border-radius: 10px;
+    text-align: center;
+    background: rgb(116, 167, 118);
+    color: #333333;
+    font-weight: 600;
+    animation: fromDown 0.6s ease;
+    transition: 0.6s ease-in-out;
+    &.deleted {
+      transition: 0.6s ease-in-out;
+      opacity: 0;
+    }
+  }
+  button {
+    position: absolute;
+    top: 8%;
+    right: 8%;
+    background: rgb(201, 71, 71);
+    outline: none;
+    border: none;
+    cursor: pointer;
+  }
+}
+
+@keyframes fromDown {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 300px;
+  }
+}

@@ -1,0 +1,8 @@
+query todos($userId: Int!) {
+  todos(where: { userId: { equals: $userId } }) {
+    id
+    body
+    createdAt
+    completed
+  }
+}

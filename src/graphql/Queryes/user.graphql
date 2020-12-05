@@ -1,0 +1,8 @@
+query user($userId: Int!) {
+  user(where: { id: $userId }) {
+    todos {
+      id
+      createdAt
+    }
+  }
+}
