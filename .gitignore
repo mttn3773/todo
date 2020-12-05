@@ -30,9 +30,7 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
-#types 
-nexus.ts
-schema.graphql
+
 
 # vercel
 .vercel
